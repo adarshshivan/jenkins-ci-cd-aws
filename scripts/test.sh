@@ -1,3 +1,4 @@
 #!/bin/bash
 set -e
-pytest
+
+docker run --rm jenkins-ci-cd-app pytest
