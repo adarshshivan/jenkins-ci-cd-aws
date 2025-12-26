@@ -1,32 +1,48 @@
-stages {
+pipeline {
+    agent any
 
-    stage('Checkout') {
-        steps {
-            checkout scm
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                sh 'chmod +x scripts/*.sh'
+                sh 'docker build -t jenkins-ci-cd-app .'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh './scripts/test.sh'
+            }
+        }
+
+        stage('Docker Run & Validate') {
+            steps {
+                sh '''
+                docker rm -f jenkins-test-container || true
+                docker run -d -p 5000:5000 --name jenkins-test-container jenkins-ci-cd-app
+                sleep 5
+                curl http://localhost:5000/health
+                '''
+            }
         }
     }
 
-    stage('Docker Build') {
-        steps {
-            sh 'chmod +x scripts/*.sh'
-            sh 'docker build -t jenkins-ci-cd-app .'
+    post {
+        always {
+            sh 'docker rm -f jenkins-test-container || true'
         }
-    }
-
-    stage('Test') {
-        steps {
-            sh './scripts/test.sh'
+        success {
+            echo 'Pipeline completed successfully'
         }
-    }
-
-    stage('Docker Run & Validate') {
-        steps {
-            sh """
-            docker rm -f jenkins-test-container || true
-            docker run -d -p 5000:5000 --name jenkins-test-container jenkins-ci-cd-app
-            sleep 5
-            curl http://localhost:5000/health
-            """
+        failure {
+            echo 'Pipeline failed'
         }
     }
 }
