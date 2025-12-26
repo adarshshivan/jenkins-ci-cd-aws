@@ -1,2 +1,3 @@
 #!/bin/bash
-echo "Test stage executed"
+set -e
+pytest

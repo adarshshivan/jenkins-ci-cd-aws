@@ -1,2 +1,3 @@
 #!/bin/bash
-echo "Build stage executed"
+set -e
+echo "Build stage: nothing to compile for Python app"

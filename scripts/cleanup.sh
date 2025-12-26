@@ -1,2 +1,2 @@
 #!/bin/bash
-echo "Cleanup stage executed"
+echo "Cleanup stage completed"
