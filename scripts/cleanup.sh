@@ -1,2 +1,2 @@
 #!/bin/bash
-echo "Cleanup stage completed"
+docker rm -f jenkins-ci-cd-app || true
