@@ -23,15 +23,21 @@ pipeline {
         }
 
         stage('Docker Run & Validate') {
-            steps {
-                sh '''
-                docker rm -f jenkins-test-container || true
-                docker run -d -p 5000:5000 --name jenkins-test-container jenkins-ci-cd-app
-                sleep 5
-                curl http://localhost:5000/health
-                '''
-            }
-        }
+    steps {
+        sh '''
+        docker rm -f jenkins-test-container || true
+
+        docker run -d \
+          --name jenkins-test-container \
+          jenkins-ci-cd-app
+
+        sleep 5
+
+        docker exec jenkins-test-container curl http://localhost:5000/health
+        '''
+    }
+}
+
     }
 
     post {
