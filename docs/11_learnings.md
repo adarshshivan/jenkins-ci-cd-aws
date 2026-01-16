@@ -1,4 +1,6 @@
-# Learnings
+# 📚 Learnings
+
+## Key Takeaways
 
 - CI behavior depends heavily on execution environment
 - Docker improves consistency but introduces networking considerations
